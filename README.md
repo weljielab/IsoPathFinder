@@ -2,7 +2,9 @@
 Workflow for isotope mapping
 
 
-# See below for how to run the program through iPython (Ensure you have ipython installed (we recommend the Anaconda suite, at https://www.anaconda.com/download/)):
+# See below for how to run the program through iPython:
+
+Ensure you have ipython installed (we recommend the Anaconda suite, at https://www.anaconda.com/download/)
 
 To label the metabolic network, run the ReactionModeling_IsotopeTracing_Rhoades_NoNameConvert.ipynb notebook (e.g. if in the terminal, call 'ipython', then %run ReactionModeling_IsotopeTracing_Rhoades_NoNameConvert.ipynb'. NOTE, if you want to change the tracer and model organism, you will need to edit the appropriate cells in the .ipynb, which could be done by opening the notebook through Jupyter.
 
