@@ -3,6 +3,7 @@
 
 # In[1]:
 
+
 ###############################################################################################################################
 #Tracing Paths
 
@@ -19,35 +20,42 @@
 
 # In[2]:
 
+
 import numpy, pandas, os, sys, re, itertools, csv, gc
 
 
 # In[3]:
+
 
 from itertools import chain, repeat, combinations, permutations, cycle
 
 
 # In[4]:
 
+
 from collections import defaultdict
 
 
 # In[5]:
+
 
 from pathos.helpers import mp
 
 
 # In[6]:
 
+
 from contextlib import closing
 
 
 # In[7]:
 
+
 import dill as pickle
 
 
 # In[8]:
+
 
 #Load all the dictionaries
 ResultsList=[]
@@ -55,11 +63,12 @@ ResultsList=[]
 #You will likey not want to test beyond 15 steps anyway given the number of possible paths, but you can change the number of 
 #.. dictionaries to read in here
 
-for MyDict in range(16):
+for MyDict in range(15):
     ResultsList.append(pickle.load(open('Dictionary_FromRound_{0}.pkl'.format(MyDict+1),'rb')))
 
 
 # In[9]:
+
 
 ##Read in file for name conversion, make dictionaries
 CpdConvert=pandas.read_csv('CpdConvertDict.csv')
@@ -69,6 +78,7 @@ CommonToMeta=dict(zip(CpdConvert.Common,CpdConvert.Name))
 
 
 # In[10]:
+
 
 #Read in file for pubchem smiles to common name
 PubChemCpds=pandas.read_csv('PubChemCpdMatchAdd.csv',sep=',')
@@ -86,7 +96,14 @@ for cpd in range(len(PubChemCpds)):
     
 
 
+# In[ ]:
+
+
+
+
+
 # In[11]:
+
 
 #Old function - get the smiles from a pubchem name ID
 def SmilesFromMetaCycCpd(OneCpdString):
@@ -105,6 +122,7 @@ def SmilesFromMetaCycCpd(OneCpdString):
 
 # In[12]:
 
+
 #Convert user input to Smiles - return list of labeled SMILES options
 def SmilesOptionsFromUserInput(userinput):
     try:
@@ -117,6 +135,7 @@ def SmilesOptionsFromUserInput(userinput):
 
 
 # In[13]:
+
 
 #Possibilities level off for metabolites, e.g. Serine starts duplicating after round 12, so only need to calculate paths until then
 def FinalRoundMetabLength(ResultsDictionaries,MetabName):
@@ -135,6 +154,7 @@ def FinalRoundMetabLength(ResultsDictionaries,MetabName):
 
 
 # In[14]:
+
 
 #Combinations of isotopomers may exist for the same compound 
 #    e.g. metabolite X M+2 could be C*(C(C*)OOO), or C*(C*(C)OOO), so we need to run a combinations function to get all possible isotopologues
@@ -198,6 +218,7 @@ def IsotopomerCombinations(CpdSmiles,NumOfLabels):
 
 # In[15]:
 
+
 #Calculate longest path for each isotopomer - cap at 15 due to number of possibilities
 def CalculateIsotopomerLength(ResultsDictionaries,IsotopomerComboList):
     Lengths=[]
@@ -213,6 +234,7 @@ def CalculateIsotopomerLength(ResultsDictionaries,IsotopomerComboList):
 
 
 # In[16]:
+
 
 #Function to remove charges and unwanted characters in smiles strings
 ChargeRemover=re.compile(r'\+|\-')
@@ -237,6 +259,7 @@ def LabelStrippersOne(x):
 
 # In[17]:
 
+
 #Name converter from Smiles to 'English'
 def ReactantConvertOne(x):
     try:
@@ -247,6 +270,7 @@ def ReactantConvertOne(x):
 
 
 # In[18]:
+
 
 def CombinedConvertMetabs(OneLabeledMatrixCpd):
     
@@ -267,6 +291,7 @@ def CombinedConvertMetabs(OneLabeledMatrixCpd):
 
 # In[19]:
 
+
 #Function to call the conversion of reactants and products to english
 def UpdatedMetabConvert(LabeledMatrixCpds):
     LabeledMatrixCpds=[CombinedConvertMetabs(x) for x in LabeledMatrixCpds]
@@ -274,6 +299,7 @@ def UpdatedMetabConvert(LabeledMatrixCpds):
 
 
 # In[20]:
+
 
 #Trim reaction matrix to drop nonmatching metabolites (i.e. they can't be named)
 def TrimExportReactionMatrix(ExportReactionMatrix):
@@ -291,6 +317,7 @@ def TrimExportReactionMatrix(ExportReactionMatrix):
 
 # In[21]:
 
+
 #If metabolite didn't get an english name match, drop it
 def DropMissingMetabs(ConvertedMatrixColumnCpd):
 
@@ -300,6 +327,7 @@ def DropMissingMetabs(ConvertedMatrixColumnCpd):
 
 
 # In[22]:
+
 
 #Taken from  itertools guide
 def islice(iterable, *args):
@@ -316,6 +344,7 @@ def islice(iterable, *args):
 
 
 # In[23]:
+
 
 #Taken from itertools guide
 def roundrobin(*iterables):
@@ -334,6 +363,7 @@ def roundrobin(*iterables):
 
 # In[24]:
 
+
 #Convert each isotopomer in a row to the common name with the M+x in tact
 def IsotopomerToCommonName(OneRowPathMatrix):
     ConvertList=[CombinedConvertMetabs(x) for x in OneRowPathMatrix.values[0]if not type(x)==list] #good
@@ -343,6 +373,7 @@ def IsotopomerToCommonName(OneRowPathMatrix):
 
 
 # In[25]:
+
 
 #Remove metabolites which cannot be name-converted from smiles
 def RemoveTheUnnamed(OnePathMatrix):
@@ -357,6 +388,7 @@ def RemoveTheUnnamed(OnePathMatrix):
 
 # In[26]:
 
+
 #Convert path matrix to common name
 def ConvertPathMatrixToEnglish(OnePathMatrix):
     NewMatrix=pandas.DataFrame()
@@ -368,6 +400,7 @@ def ConvertPathMatrixToEnglish(OnePathMatrix):
 
 
 # In[27]:
+
 
 #With a given input isotopologue name, calculate the possible isotopomer combinations and run each through the BuildPathsCoreParallel function
 def BuildPathsSetupIsotopomers(Dictionaries,userinputname,PathLength):
@@ -409,8 +442,10 @@ def BuildPathsSetupIsotopomers(Dictionaries,userinputname,PathLength):
     #Given the parallel form of this script, the DF should be read back in
     #.. and duplicate rows should be dropped
     try:
-        TempDF=pandas.read_csv('{0}_Paths_{1}Rxns.csv'.format(userinputname,PathLength),header=None)
+        TempDF=pandas.read_csv('{0}_Paths_{1}Rxns.csv'.format(userinputname,PathLength),header=None,error_bad_lines=False)
         TempDF=TempDF.drop_duplicates()
+        TempDF=TempDF.reset_index(drop=True)
+        TempDF=DropDuplicatedMetabNamesPostCalc(TempDF)
         with open('{0}_Paths_{1}Rxns.csv'.format(userinputname,PathLength),'w') as fp: #'w' to overwrite the file
             TempDF.to_csv(fp,index=False,header=False)
         fp.close()
@@ -418,12 +453,22 @@ def BuildPathsSetupIsotopomers(Dictionaries,userinputname,PathLength):
         pass
 
 
-# In[ ]:
-
-
-
-
 # In[28]:
+
+
+#Drop any duplicate name within the same row - this function is to remove futile cycling in metabolic path searches
+def DropDuplicatedMetabNamesPostCalc(SeedPathMatrix):
+    DropIndices=[]
+    for rxn in range(len(SeedPathMatrix)):
+        if len(list(set([x for x in SeedPathMatrix[rxn:rxn+1].values[0] if 'M+' in x])))!=len(list([x for x in SeedPathMatrix[rxn:rxn+1].values[0] if 'M+' in x])): 
+            DropIndices.append(rxn)
+    SeedPathMatrix=SeedPathMatrix.drop(DropIndices)
+    SeedPathMatrix=SeedPathMatrix.reset_index(drop=True)
+    return(SeedPathMatrix)
+
+
+# In[29]:
+
 
 #Build a DF that contains the product of interest and the res
 def BuildOneRoundPath(ResultDictionary,MetabName):
@@ -445,7 +490,8 @@ def BuildOneRoundPath(ResultDictionary,MetabName):
     return(Output)
 
 
-# In[29]:
+# In[30]:
+
 
 #ProductDictionaryResult is the result of one round of BuildOneRoundPath
 #Prior round will be the x-1 round of the x'th round which built the ProductDictionaryResult
@@ -500,7 +546,8 @@ def AddOnPath(ProductDictionaryResult,PriorRoundDictionary):
             return(Output)
 
 
-# In[30]:
+# In[31]:
+
 
 #Write a function to convert any metabolite names in an output file to more common names
 #Its ugly but it works, lets assume dataframes are not millions of rows
@@ -521,7 +568,8 @@ def ConvertNames(PathMatrix):
     return(NewMatrix)
 
 
-# In[31]:
+# In[32]:
+
 
 #Drop any duplicate name within the same row - this function is to remove futile cycling in metabolic path searches
 def DropDuplicatedMetabNamesAny(SeedPathMatrix):
@@ -534,7 +582,8 @@ def DropDuplicatedMetabNamesAny(SeedPathMatrix):
     return(SeedPathMatrix)
 
 
-# In[32]:
+# In[33]:
+
 
 #Start with a function to build the paths from a chosen ending point, then this will be embedded in a larger function that
 #starts from each possible ending point (e.g. Round 1-20)
@@ -588,7 +637,8 @@ def BuildPathsCoreNonParallel(StopDictNum,SeedPathMatrix,MetabName):
     return(SeedPathMatrix)
 
 
-# In[33]:
+# In[34]:
+
 
 def AddOnPathParallel3(SplitMatrix,StopDictNum):
     #Build paths going backwards, back to input tracer
@@ -624,7 +674,8 @@ def AddOnPathParallel3(SplitMatrix,StopDictNum):
     #return(SplitMatrix)
 
 
-# In[34]:
+# In[35]:
+
 
 #Current
 #Input with the particular dictionary round of interest
@@ -666,7 +717,6 @@ def BuildPathsCoreParallel(ResultDictionaryNum,metabname,userinputname,StopDictN
                         
                     try:
                                 
-                        #print('Go smaller - 16') #Smaller splits
                         SeedPathSplit=list(numpy.array_split(SeedPath,16))
                         StopDictRepeat=list(repeat(ResultDictionaryNum-2,16))
                             #pooler=mp.Pool(8)
@@ -684,7 +734,6 @@ def BuildPathsCoreParallel(ResultDictionaryNum,metabname,userinputname,StopDictN
                         #print('Error 1- Some of these paths cannot be connected, try another isotopologue if no results are written to csv [meaning no paths could be connected]')
                         
                         try:
-                            #print('Even Smaller - 8')
                                 #Try smaller splits
                             SeedPathSplit=list(numpy.array_split(SeedPath,8))
                             StopDictRepeat=list(repeat(ResultDictionaryNum-2,8))
@@ -702,7 +751,6 @@ def BuildPathsCoreParallel(ResultDictionaryNum,metabname,userinputname,StopDictN
                             #print('Error 2- Some of these paths cannot be connected, try another isotopologue if no results are written to csv [meaning no paths could be connected]')
                         
                             try:
-                                #print('Even Smaaaalller - 4')
                                 #Try smaller splits
                                 SeedPathSplit=list(numpy.array_split(SeedPath,4))
                                 StopDictRepeat=list(repeat(ResultDictionaryNum-2,4))
@@ -718,7 +766,6 @@ def BuildPathsCoreParallel(ResultDictionaryNum,metabname,userinputname,StopDictN
                             except:
                 
                                 try:
-                                    #print('Tiny! - 2')
                                 #Try smaller split
                                     SeedPathSplit=list(numpy.array_split(SeedPath,2))
                                     StopDictRepeat=list(repeat(ResultDictionaryNum-2,2))
@@ -762,7 +809,8 @@ def BuildPathsCoreParallel(ResultDictionaryNum,metabname,userinputname,StopDictN
                 return
 
 
-# In[35]:
+# In[36]:
+
 
 #def BuildPaths(): #User input form
 def BuildPaths(userinput,pathlength):
@@ -796,13 +844,15 @@ def BuildPaths(userinput,pathlength):
     
 
 
-# In[36]:
+# In[37]:
+
 
 #If you want to run a query yourself, an example would be to call BuildPaths('Serine M+3',12)
+BuildPaths('Serine M+3',13)
 
 
-# In[39]:
+# In[ ]:
 
-#In this cell, you can change the isotopologue and the path length
-#BuildPaths('Serine M+3',14)
+
+
 
