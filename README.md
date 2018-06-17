@@ -7,13 +7,13 @@ File information and workflow for simulating isotope tracing at atomic resolutio
 
 *CpdConvertDict.csv* - Matches MetaCyc-specific metabolite names to more commonly used names of major metabolites of interest (used in the IsoPathFinder script)
 
-*IsoPathFinder-Parallel_WithNameConversion_Rhoades* - Python scripts to take precompiled labeled metabolic networks and trace paths to labeled metabolite of interest from the initial isotope tracer used to build the labeled network. If using the Jupyter notebook, this would be where specific metabolite and path lengths would be entered (see comments within the notebook for more detail). Runs in linux and can use multiple cores with the pathos package installed.
+*IsoPathFinder* - Python scripts to take precompiled labeled metabolic networks and trace paths to labeled metabolite of interest from the initial isotope tracer used to build the labeled network. If using the Jupyter notebook, this would be where specific metabolite and path lengths would be entered (see comments within the notebook for more detail). Runs in linux and can use multiple cores with the pathos package installed.
 
 *PubChemCpdMatchAdd.csv* - SMILES strings matched to metabolite names, courtesy of the PubChemPy module.
 
-*ReactionModeling_IsotopeTracing_Rhoades_NoNameConvert* - Python script to build the labeled metabolite network. If you are interested in simulating any tracer, the notebook can be modified accordingly (in the paper, we built a 13C6 glucose network). Detailed comments exist in the notebook to both change the labeled metabolite(s) to simulate, as well as exlusion of any uninformative metabolites (e.g. we 13C-carbon dioxide at each step). Runs in linux and can use multiple cores with the pathos package installed.
+*ReactionModeling* - Python script to build the labeled metabolite network. If you are interested in simulating any tracer, the notebook can be modified accordingly (in the paper, we built a 13C6 glucose network). Detailed comments exist in the notebook to both change the labeled metabolite(s) to simulate, as well as exlusion of any uninformative metabolites (e.g. we 13C-carbon dioxide at each step). Runs in linux and can use multiple cores with the pathos package installed.
 
-*ReactionTrimmer_Parallel_Rhoades* - Custom example script to filter the paths based on prior information. In the paper, thermodynamics and circadian rhythm expression datasets were incorporated to trim paths. Note we leave this here as a template, and trimming reactions should be rationalized based on the experimental objectives. Runs in linux and can use multiple cores with the pathos package installed.
+*ReactionTrimmer* - Custom example script to filter the paths based on prior information. In the paper, thermodynamics and circadian rhythm expression datasets were incorporated to trim paths. Note we leave this here as a template, and trimming reactions should be rationalized based on the experimental objectives. Runs in linux and can use multiple cores with the pathos package installed.
 
 *Tepper2013_GibbsECs.csv* - Estimated Gibbs free energies from Tepper et al., 2013, used in the ReactionTrimmer_Parallel_Rhoades script.
 
