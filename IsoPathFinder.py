@@ -739,6 +739,6 @@ def BuildPaths(userinput,pathlength):
     
 
 #If you want to run a query yourself, an example would be to call BuildPaths('Serine M+3',12)
-BuildPaths('Serine M+3',9)
-BuildPaths('Glutamine M+2', 14)
+#BuildPaths('Serine M+3',9)
+#BuildPaths('Glutamine M+2', 14)
 
