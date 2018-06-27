@@ -7,7 +7,7 @@ File information and workflow for simulating isotope tracing at atomic resolutio
 
 *CpdConvertDict.csv* - Matches MetaCyc-specific metabolite names to more commonly used names of major metabolites of interest (used in the IsoPathFinder script)
 
-*IsoPathFinder* - Python scripts to take precompiled labeled metabolic networks and trace paths to labeled metabolite of interest from the initial isotope tracer used to build the labeled network. If using the Jupyter notebook, this would be where specific metabolite and path lengths would be entered (see comments within the notebook for more detail). Runs in linux and can use multiple cores with the pathos package installed.
+*IsoPathFinder* - Python scripts to take precompiled labeled metabolic networks and trace paths to labeled metabolite of interest from the initial isotope tracer used to build the labeled network. If using the Jupyter notebook, this would be where specific metabolite and path lengths would be entered (see comments within the notebook for more detail, or run the IsoPathFinderDemo.py for an example). Runs in linux and can use multiple cores with the pathos package installed.
 
 *PubChemCpdMatchAdd.csv* - SMILES strings matched to metabolite names, courtesy of the PubChemPy module.
 
