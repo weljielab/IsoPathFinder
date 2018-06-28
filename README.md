@@ -34,4 +34,4 @@ Once the labeled network is created (which will be stored locally), the function
 
 One could run the scripts purely out of a Jupyter Notebook as well, which we recommend if one wants to change the starting tracer or load their own model organism .dat from MetaCyc.
 
-Overall, the workflows runs as: ReactionModeling --> IsoPathFinder --> ReactionTrimming(optional)
+Overall, the workflow runs as: ReactionModeling --> IsoPathFinder --> ReactionTrimming(optional)
